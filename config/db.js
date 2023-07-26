@@ -1,13 +1,15 @@
 const mongoose = require('mongoose');
+const dotenv = require("dotenv");
 // const config = require('config');
 // const db = config.get('mongoURI');
 
 // Connection to MongoDB
-const mongoURL = "mongodb+srv://stevengalaxy:6m0NvPltRJTQHYtZ@cluster0.kymrp.mongodb.net/test?retryWrites=true&w=majority";
+dotenv.config();
+const mongoURL = "mongodb+srv://stevengalaxy:3persondog@sketchbook.kymrp.mongodb.net/test";
 // const mongoURL = "mongodb://localhost:27017/table"
 const connectDB = async () => {
   try {
-    await mongoose.connect(mongoURL, {
+    await mongoose.connect(process.env.MONGODB_URI_PRODUCT, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
       // useCreateIndex: true,
