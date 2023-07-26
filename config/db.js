@@ -5,7 +5,6 @@ const dotenv = require("dotenv");
 
 // Connection to MongoDB
 dotenv.config();
-const mongoURL = "mongodb+srv://stevengalaxy:3persondog@sketchbook.kymrp.mongodb.net/test";
 // const mongoURL = "mongodb://localhost:27017/table"
 const connectDB = async () => {
   try {
