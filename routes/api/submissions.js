@@ -4,8 +4,8 @@ const Submissions = require("../../models/Submissions");
 router.get("/", async (req, res) => {
   try {
     const books = await Submissions.find({})
-      .limit(9)
-      .select({ frontPage: 1, title: 1, lid: 1 });
+      .limit(10)
+      .select({ frontPage: 1, artistName: 1, address: 1, lid: 1});
     const bookList = books.filter((book) => book.frontPage !== undefined);
     res.json(bookList);
   } catch (err) {
@@ -15,12 +15,12 @@ router.get("/", async (req, res) => {
 });
 
 router.get("/more", async (req, res) => {
-  const perPage = 9;
+  const perPage = 20;
   try {
     const books = await Submissions.find({})
       .skip(req.query.page * perPage)
       .limit(perPage)
-      .select({ frontPage: 1, title: 1, lid: 1 });
+      .select({ frontPage: 1, artistName: 1, address: 1, lid: 1});
     const bookList = books.filter((book) => book.frontPage !== undefined);
     res.json(bookList);
   } catch (err) {
