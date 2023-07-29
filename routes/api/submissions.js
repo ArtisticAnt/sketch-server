@@ -1,26 +1,61 @@
 const express = require("express");
 const router = express.Router();
 const Submissions = require("../../models/Submissions");
+// router.get("/", async (req, res) => {
+//   try {
+//     const books = await Submissions.find({})
+//       .limit(10)
+//       .select({ frontPage: 1, artistName: 1, address: 1, lid: 1});
+//     const bookList = books.filter((book) => book.frontPage !== undefined);
+//     res.json(bookList);
+//   } catch (err) {
+//     console.error(err.message);
+//     res.status(500).send("Error");
+//   }
+// });
+
 router.get("/", async (req, res) => {
   try {
-    const books = await Submissions.find({})
-      .limit(10)
-      .select({ frontPage: 1, artistName: 1, address: 1, lid: 1});
-    const bookList = books.filter((book) => book.frontPage !== undefined);
-    res.json(bookList);
+    const books = await Submissions.distinct({}).exec();
+    //   .limit(10)
+    //   .select({ frontPage: 1, artistName: 1, address: 1, lid: 1 });
+    // const bookList = books.filter((book) => book.frontPage !== undefined);
+    res.json(books);
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Error");
   }
 });
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 router.get("/more", async (req, res) => {
-  const perPage = 30;
+  const perPage = 20;
   try {
     const books = await Submissions.find({})
       .skip(req.query.page * perPage)
       .limit(perPage)
-      .select({ frontPage: 1, artistName: 1, address: 1, lid: 1});
+      .select({ frontPage: 1, artistName: 1, address: 1, lid: 1 });
     const bookList = books.filter((book) => book.frontPage !== undefined);
     res.json(bookList);
   } catch (err) {
@@ -45,15 +80,13 @@ router.get("/book", async (req, res) => {
 router.get("/search", async (req, res) => {
   try {
     // if (req.query.item === "auth") {
-      const contents = await Submissions.find({
-        // artistName: req.query.word,
+    const contents = await Submissions.find({
       artistName: { $regex: req.query.word, $options: 'i' }
-//     }
-      })
+    })
       .limit(10)
-      .select({ frontPage: 1, artistName: 1, address: 1, lid: 1});
-      const bookList = contents.filter((book) => book.frontPage !== undefined);
-      res.json(bookList);
+      .select({ frontPage: 1, artistName: 1, address: 1, lid: 1 });
+    const bookList = contents.filter((book) => book.frontPage !== undefined);
+    res.json(bookList);
     // }
     // else if(req.query.item === "title"){
     //   const contents = await Submissions.find({
@@ -68,14 +101,14 @@ router.get("/search", async (req, res) => {
 });
 
 router.get("/moreSearch", async (req, res) => {
-  const perPage = 50;
+  const perPage = 20;
   try {
     const books = await Submissions.find({
       artistName: { $regex: req.query.word, $options: 'i' }
     })
       .skip(req.query.page * perPage)
       .limit(perPage)
-      .select({ frontPage: 1, artistName: 1, address: 1, lid: 1});
+      .select({ frontPage: 1, artistName: 1, address: 1, lid: 1 });
     const bookList = books.filter((book) => book.frontPage !== undefined);
     res.json(bookList);
   } catch (err) {
@@ -83,18 +116,5 @@ router.get("/moreSearch", async (req, res) => {
     res.status(500).send("Error");
   }
 });
-
-// router.get("/search1", async (req, res) => {
-//   console.log(req.query.id);
-//   try {
-//     const contents = await Submissions.find({
-//       artistName: { $regex: req.query.id, $options: 'i' }
-//     }).select({ frontPage: 1, artistName: 1, address: 1, lid: 1  });
-//     res.json(contents);
-//   }catch (err) {
-//     console.error(err.message);
-//     res.status(500).send("Error");
-//   }
-// });
 
 module.exports = router;
