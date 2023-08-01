@@ -1,24 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const Submissions = require("../../models/Submissions");
-// router.get("/", async (req, res) => {
-//   try {
-//     const books = await Submissions.find({})
-//       .limit(10)
-//       .select({ frontPage: 1, artistName: 1, address: 1, lid: 1 });
-//     const bookList = books.filter((book) => book.frontPage !== undefined);
-//     res.json(bookList);
-//   } catch (err) {
-//     console.error(err.message);
-//     res.status(500).send("Error");
-//   }
-// });
 
 router.get("/", async (req, res) => {
   try {
     const books = await Submissions.aggregate([{ $sample: { size: 10 } }]).exec()
-    //   .limit(10)
-    // .select({ frontPage: 1, artistName: 1, address: 1, lid: 1 });
     const bookList = books.filter((book) => book.frontPage !== undefined);
     res.json(bookList);
   } catch (err) {
@@ -29,12 +15,8 @@ router.get("/", async (req, res) => {
 
 
 router.get("/more", async (req, res) => {
-  // const perPage = 20;
   try {
     const books = await Submissions.aggregate([{ $sample: { size: 10 } }]).exec()
-    // .skip(req.query.page * perPage)
-    // .limit(perPage)
-    // .select({ frontPage: 1, artistName: 1, address: 1, lid: 1 });
     const bookList = books.filter((book) => book.frontPage !== undefined);
     res.json(bookList);
   } catch (err) {
@@ -68,7 +50,7 @@ router.get("/search", async (req, res) => {
         { 'address.zip': { $regex: req.query.word, $options: 'i' } }
       ]
     })
-      .limit(10)
+      .limit(50)
       .select({ frontPage: 1, artistName: 1, address: 1, lid: 1, title: 1 });
     const bookList = contents.filter((book) => book.frontPage !== undefined);
     res.json(bookList);
